@@ -1,0 +1,10 @@
+services:
+    postgres:
+        image: postgres:alpine
+        restart: unless-stopped
+        environment:
+            POSTGRES_DB: pmDB
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+        ports:
+            - 5432:5432
