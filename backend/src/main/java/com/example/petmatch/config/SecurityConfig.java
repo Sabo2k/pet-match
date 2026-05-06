@@ -1,5 +1,6 @@
 package com.example.petmatch.config;
 
+import com.example.petmatch.domain.entities.User;
 import com.example.petmatch.security.AdvertisementUserDetailsService;
 import com.example.petmatch.security.JwtAuthenticationFilter;
 import com.example.petmatch.services.AuthenticationService;
@@ -27,8 +28,19 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
+        AdvertisementUserDetailsService blogUserDetailsService = new AdvertisementUserDetailsService(userRepository);
 
-        return new AdvertisementUserDetailsService(userRepository);
+        String email = "user@test.com";
+        userRepository.findByEmail(email).orElseGet(() -> {
+            User newUser = User.builder()
+                    .name("Test User")
+                    .email(email)
+                    .password(passwordEncoder().encode("password"))
+                    .build();
+            return userRepository.save(newUser);
+        });
+
+        return blogUserDetailsService;
     }
 
     @Bean
