@@ -1,13 +1,12 @@
-import './App.css'
-import { Button } from '@chakra-ui/react'
+import "./App.css";
+import { Button } from "@chakra-ui/react";
 
 function App() {
-
-  return (
-    <>
-      <Button>Click Me</Button>
-    </>
-  )
+    return (
+        <>
+            <Button>Click Me</Button>
+        </>
+    );
 }
 
-export default App
+export default App;
