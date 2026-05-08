@@ -1,10 +1,10 @@
 import "./App.css";
-import { Button } from "@chakra-ui/react";
+import AppRouter from "./Router";
 
 function App() {
     return (
         <>
-            <Button>Click Me</Button>
+            <AppRouter/>
         </>
     );
 }
