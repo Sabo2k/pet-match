@@ -12,13 +12,14 @@ import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { useNavigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { toaster } from "@/components/ui/toaster"
+import { useAuth } from "@/contexts/useAuth";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-
+    const { setToken } = useAuth(); // Use the context
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -52,6 +53,11 @@ export default function LoginPage() {
             // Assuming your backend returns a token or user data
             const data = await response.json();
             console.log("Login successful:", data);
+
+            // Update both context AND localStorage
+            setToken(data.token); // ✅ Update context state
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("tokenExpiry", String(Date.now() + data.expiresIn * 1000));
 
             toaster.create({
                 title: "Success!",

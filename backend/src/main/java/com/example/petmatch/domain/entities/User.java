@@ -73,7 +73,7 @@ public class User {
     }
 
     /**
-     * every time a user entity is saved into
+     * every time a user object is saved into
      * the database where the createdAt member
      * is null, populate createdAt
      * with the current datetime
