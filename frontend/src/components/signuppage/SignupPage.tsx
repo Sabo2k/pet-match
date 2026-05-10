@@ -11,6 +11,7 @@ import {
 import { useToast } from "@chakra-ui/toast";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { useNavigate } from "react-router-dom";
+import { toaster } from "@/components/ui/toaster"
 
 export default function SignupPage() {
     const [username, setUsername] = useState("");
@@ -25,14 +26,15 @@ const handleSubmit = async (e: React.FormEvent) => {
     setIsLoading(true);
     console.log("Submitting:", { username, email, password });
     // Basic validation
-    if (!username.trim() || !email.trim() || !password.trim()) {
-        toast({
+    if(!username.trim() || !email.trim() || !password.trim()) {
+
+        toaster.create({
             title: "Error",
             description: "All fields are required.",
-            status: "error",
+            type: "error",
             duration: 3000,
-            isClosable: true,
         });
+
         setIsLoading(false);
         return;
     }
@@ -50,25 +52,24 @@ const handleSubmit = async (e: React.FormEvent) => {
             throw new Error(errorData.message || "Signup failed");
         }
 
-        toast({
+        navigate("/login");
+        
+        toaster.create({
             title: "Account created!",
             description: "You can now log in.",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
+            type: "success",
+            duration: 3000,
         });
 
-        navigate("/login");
     } 
     catch(error: unknown) {
         const errorMessage = error instanceof Error ? error.message : "Failed to create account. Please try again.";
-
-        toast({
+        
+        toaster.create({
             title: "Error",
             description: errorMessage,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
+            type: "error",
+            duration: 3000,
         });
     } 
     finally {
@@ -77,6 +78,8 @@ const handleSubmit = async (e: React.FormEvent) => {
 };
 
     return (
+        <>
+
         <Box maxW="md" mx="auto" mt={10} p={6} borderWidth={1} borderRadius="lg" boxShadow="lg">
             <form onSubmit={handleSubmit}>
             <Stack gap={4}>
@@ -134,5 +137,6 @@ const handleSubmit = async (e: React.FormEvent) => {
             </Stack>
             </form>
         </Box>
+        </>
     );
 }
