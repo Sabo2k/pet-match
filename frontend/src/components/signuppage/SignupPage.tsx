@@ -8,17 +8,15 @@ import {
     Text,
     Link
 } from "@chakra-ui/react";
-import { useToast } from "@chakra-ui/toast";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { useNavigate } from "react-router-dom";
-import { toaster } from "@/components/ui/toaster"
+import { toaster } from "@/components/ui/toaster";
 
 export default function SignupPage() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const toast = useToast();
     const navigate = useNavigate();
 
 const handleSubmit = async (e: React.FormEvent) => {
@@ -64,7 +62,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     } 
     catch(error: unknown) {
         const errorMessage = error instanceof Error ? error.message : "Failed to create account. Please try again.";
-        
+
         toaster.create({
             title: "Error",
             description: errorMessage,

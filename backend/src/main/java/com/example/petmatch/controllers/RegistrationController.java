@@ -19,7 +19,8 @@ public class RegistrationController {
         try {
             User created = registrationService.register(request);
             return ResponseEntity.status(201).body(created.getEmail());
-        } catch (IllegalArgumentException e) {
+        }
+        catch(IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

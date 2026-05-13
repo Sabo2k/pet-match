@@ -24,9 +24,19 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
+/**
+ * Configuration class for Spring Security settings in the PetMatch application.
+ * This class defines beans for authentication, authorization, CORS and JWT.
+ * It ensures access to endpoints and manages user sessions statelessly.
+ */
 @Configuration
 public class SecurityConfig {
 
+    /**
+     * This filter validates JWT tokens for incoming requests and sets the authentication in the context.
+     * @param authenticationService The service used to authenticate users and validate tokens
+     * @return a configured JwtAuthenticationFilter instance.
+     */
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationService authenticationService) {
         return new JwtAuthenticationFilter(authenticationService);
@@ -36,6 +46,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         AdvertisementUserDetailsService blogUserDetailsService = new AdvertisementUserDetailsService(userRepository);
 
+        // Create a default test user if it doesn't exist
         String email = "user@test.com";
         userRepository.findByEmail(email).orElseGet(() -> {
             User newUser = User.builder()
@@ -49,11 +60,20 @@ public class SecurityConfig {
         return blogUserDetailsService;
     }
 
+    /**
+     * Configures the security filter chain for HTTP requests.
+     * Defines which endpoints are public and which require authentication.
+     * @param httpSecurity HttpSecurity object to configure.
+     * @param jwtAuthenticationFilter JWT filter to add to the filter chain.
+     * @return
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
+            HttpSecurity httpSecurity,
             JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
-        http
+
+        httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
@@ -66,9 +86,15 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
+        return httpSecurity.build();
     }
 
+    /**
+     * Configures CORS (Cross-Origin Resource Sharing) settings.
+     * Allows requests from the frontend origin (e.g., React/Vue app) and
+     * specifies allowed methods and headers.
+     * @return a CorsConfigurationSource instance with the configured CORS settings
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -81,13 +107,23 @@ public class SecurityConfig {
         return source;
     }
 
+    /**
+     *
+     * @return
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    /**
+     *
+     * @param authenticationConfiguration The AuthenticationConfiguratino to extract the AuthenticationManager
+     * @return an AuthenticationManager instance
+     * @throws Exception if an error occurs during configuration
+     */
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
-        return configuration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
