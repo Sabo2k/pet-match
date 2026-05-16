@@ -34,8 +34,10 @@ public class User {
 
     /**
      * checks if two User objects are equal based on their fields.
-     * @param objectToCompareTo object to be compared to
-     * @return boolean, indicating whether the two users are identical
+     * @param objectToCompareTo the object to compare with the current User instance.
+     *                          It should be of type User for a valid comparison.
+     * @return boolean, indicating whether the two users are identical in terms of their id, email, password, username,
+     *         and createdAt fields.
      */
     @Override
     public boolean equals(Object objectToCompareTo) {
@@ -62,9 +64,7 @@ public class User {
     }
 
     /**
-     * generates a unique integer value (hash code) for
-     * hash-based collections to efficiently store
-     * and retreive objects
+     * generates a unique integer value (hash code) for hash-based collections to efficiently store and retreive objects
      * @return unique integer value
      */
     @Override
@@ -73,10 +73,8 @@ public class User {
     }
 
     /**
-     * every time a user object is saved into
-     * the database where the createdAt member
-     * is null, populate createdAt
-     * with the current datetime
+     * every time a user object is saved into the database where the createdAt member is null, populate createdAt with
+     * the current datetime
      */
     @PrePersist
     protected void onCreate() {
