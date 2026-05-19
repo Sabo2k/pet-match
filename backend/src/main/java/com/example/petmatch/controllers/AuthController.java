@@ -47,18 +47,33 @@ public class AuthController {
     @PostMapping
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
 
+        // Use the AuthenticationService to authenticate the user's credentials (email and password) provided in the
+        // LoginRequest. If authentication is successful, the service will return a UserDetails object containing the
+        // user's information. If authentication fails, an exception will be thrown, which can be handled by the calling
+        // code to return an appropriate error response to the client.
         UserDetails userDetails = authenticationService.authenticate(
                 loginRequest.getEmail(),
                 loginRequest.getPassword()
         );
 
+        // If authentication is successful, generate a JWT token for the authenticated user using the
+        // AuthenticationService.
         String tokenValue = authenticationService.generateToken(userDetails);
 
+        // Create an AuthResponse object containing the generated token and its expiration time (in seconds).
+        // The token is included in the response body, allowing the client to use it for subsequent authenticated
+        // requests to protected endpoints. The expiration time is set to 86400 seconds (24 hours) in this example, but
+        // it can be configured as needed.
         AuthResponse authResponse = AuthResponse.builder()
                 .token(tokenValue)
                 .expiresIn(86400)
                 .build();
 
+        // Return a ResponseEntity with the AuthResponse containing the token and expiration time.
+        // The response status is set to 200 OK if authentication is successful, allowing the client to receive the
+        // token and use it for authentication in future requests. If authentication fails, an appropriate error
+        // response can be returned by catching the exception thrown by the AuthenticationService and returning a
+        // ResponseEntity with an error status
         return ResponseEntity.ok(authResponse);
     }
 }

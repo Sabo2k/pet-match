@@ -86,9 +86,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // This will check the provided email and password against the configured authentication provider (e.g., a
         // database or in-memory user store). If the credentials are valid, authentication will succeed; otherwise, an
         // exception will be thrown.
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-        );
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 
         // If authentication is successful, load and return the user details using the UserDetailsService.
         // The UserDetailsService will fetch the user information based on the email (username) provided.
@@ -101,8 +99,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * Generates a JWT token for the authenticated user. This method creates a JWT token containing the user's username
      * as the subject, along with the issued date and expiration date. The token is signed using the secret key and the
      * HS256 algorithm. The generated token can be used by the client for subsequent authenticated requests to
-     * @param userDetails
-     * @return
+     * @param userDetails the UserDetails object containing the authenticated user's information, which is used to set
+     *                    the subject of the JWT token. The username from the UserDetails is included in the token
+     *                    claims, allowing the server to identify the user associated with the token when it is
+     *                    validated in future requests.
+     * @return a JWT token as a String that can be used for authentication in subsequent requests. The token includes
+     *         the user's username as the subject, the issued date, and the expiration date, and is signed with the
+     *         secret key to ensure its integrity and authenticity.
      */
     @Override
     public String generateToken(UserDetails userDetails) {
@@ -133,11 +136,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public UserDetails validateToken(String token) {
+
         // Extract the username from the JWT token using the extractUsername method, which parses the token and
-        // retrieves the subject. Then, use the UserDetailsService to load and return the user details based on the
+        // retrieves the subject (username) from the token claims.
+        // Then, use the UserDetailsService to load and return the user details based on the
         // extracted username. If the token is invalid or if the user cannot be found, an exception may be thrown during
         // parsing or loading.
         String username = extractUsername(token);
+
         // Load and return the user details using the UserDetailsService based on the extracted username.
         return userDetailsService.loadUserByUsername(username);
     }

@@ -39,11 +39,23 @@ public class SecurityConfig {
      */
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationService authenticationService) {
+        // Create and return a new instance of the JwtAuthenticationFilter, passing the authentication service to its
+        // constructor, so it can use it for validating JWT tokens and authenticating users.
         return new JwtAuthenticationFilter(authenticationService);
     }
 
+    /**
+     * Defines a UserDetailsService bean that loads user-specific data for authentication.
+     * It also creates a default test user if it doesn't already exist in the database.
+     * The bean annotation allows Spring to manage this service and inject it where needed for authentication processes.
+     * @param userRepository The repository used to access user data from the database, required for loading user
+     *                       details and creating a default user.
+     * @return a UserDetailsService instance that can be used by Spring Security to authenticate users based on their
+     *         email and password.
+     */
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
+        // Create an instance of the custom UserDetailsService implementation
         AdvertisementUserDetailsService blogUserDetailsService = new AdvertisementUserDetailsService(userRepository);
 
         // Create a default test user if it doesn't exist
@@ -65,8 +77,8 @@ public class SecurityConfig {
      * Defines which endpoints are public and which require authentication.
      * @param httpSecurity HttpSecurity object to configure.
      * @param jwtAuthenticationFilter JWT filter to add to the filter chain.
-     * @return
-     * @throws Exception
+     * @return a SecurityFilterChain instance with the configured security settings.
+     * @throws Exception if an error occurs during configuration
      */
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -108,8 +120,9 @@ public class SecurityConfig {
     }
 
     /**
+     * Defines a PasswordEncoder bean that uses a delegating password encoder.
      *
-     * @return
+     * @return a PasswordEncoder instance that can handle multiple encoding formats, including bcrypt.
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -117,13 +130,14 @@ public class SecurityConfig {
     }
 
     /**
-     *
-     * @param authenticationConfiguration The AuthenticationConfiguratino to extract the AuthenticationManager
+     * Defines an AuthenticationManager bean that retrieves the AuthenticationManager from the provided
+     * AuthenticationConfiguration.
+     * @param authenticationConfiguration The AuthenticationConfiguration to extract the AuthenticationManager
      * @return an AuthenticationManager instance
      * @throws Exception if an error occurs during configuration
      */
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }

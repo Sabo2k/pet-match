@@ -11,6 +11,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Bridges the gap between the application's User entity and Spring Security's UserDetails interface,
+ * allowing the application to integrate with Spring Security for authentication and authorization purposes.
+ * It encapsulates the user's information and provides the necessary methods for Spring Security to perform
+ * authentication checks and manage user sessions.
+ */
 @Getter
 @RequiredArgsConstructor
 public class AdvertisementUserDetails implements UserDetails {
