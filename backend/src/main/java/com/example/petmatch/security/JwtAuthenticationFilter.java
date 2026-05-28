@@ -16,7 +16,8 @@ import java.io.IOException;
 
 /**
  * Filter that intercepts incoming HTTP requests to validate JWT tokens and set the authentication context.
- * This filter is executed once per request and checks for the presence of a JWT token in the Authorization header.
+ * This filter is executed once per request (hence it extends OncePerRequestFilter) and checks for the presence of a JWT
+ * token in the Authorization header.
  * If a valid token is found, it retrieves the user details and sets the authentication in the SecurityContext, allowing
  * the user to be authenticated for the duration of the request.
  */
@@ -63,6 +64,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UserDetails userDetails = authenticationService.validateToken(token);
 
                 // Create an authentication token using the retrieved UserDetails and set it in the SecurityContext.
+                // This allows the user to be authenticated for the duration of the request, enabling access to
+                // protected resources based on the user's roles and permissions defined in the UserDetails.
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
@@ -94,7 +97,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     /**
      * Extracts the JWT token from the Authorization header of the incoming HTTP request. The method checks if the
      * Authorization header is present and starts with the "Bearer " prefix. If it does, it extracts and returns the
-     * token by removing the prefix. If the header is not present or does not
+     * token by removing the prefix. If the header is not present or does not contain a valid Bearer token, the method
+     * returns null, allowing the filter to determine whether to attempt authentication based on the presence of a
+     * token.
      * @param request the incoming HTTP request that may contain the Authorization header with the JWT token, which will
      *                be parsed
      * @return the extracted JWT token if the Authorization header is valid and contains a Bearer token, or null if the

@@ -121,7 +121,6 @@ public class SecurityConfig {
 
     /**
      * Defines a PasswordEncoder bean that uses a delegating password encoder.
-     *
      * @return a PasswordEncoder instance that can handle multiple encoding formats, including bcrypt.
      */
     @Bean
