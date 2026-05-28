@@ -19,7 +19,8 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { setToken } = useAuth(); // Use the context
+    const { setIsAuthenticated } = useAuth();
+    
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -39,9 +40,12 @@ export default function LoginPage() {
         }
 
         try {
+            // Include credentials: 'include' to automatically send cookies with the request
+            // This allows the browser to receive and store the httpOnly authentication cookie
             const response = await fetch("http://localhost:8080/api/v1/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: 'include',  // Important: allows cookies to be sent and received
                 body: JSON.stringify({ email, password }),
             });
 
@@ -50,14 +54,11 @@ export default function LoginPage() {
                 throw new Error(errorData.message || "Login failed");
             }
 
-            // Assuming your backend returns a token or user data
-            const data = await response.json();
-            console.log("Login successful:", data);
-
-            // Update both context AND localStorage
-            setToken(data.token); // ✅ Update context state
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("tokenExpiry", String(Date.now() + data.expiresIn * 1000));
+            // Backend no longer returns the token in the response body for security.
+            // The token is stored securely in an httpOnly cookie that the browser will
+            // automatically send with all future requests.
+            // We just need to update the authentication state for UI purposes.
+            setIsAuthenticated(true);
 
             toaster.create({
                 title: "Success!",
