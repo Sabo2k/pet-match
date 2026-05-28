@@ -39,9 +39,11 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     try {
         console.log("Request body:", JSON.stringify({ username, email, password }));
+        // Include credentials: 'include' to allow the browser to handle cookies
         const response = await fetch("http://localhost:8080/api/v1/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: 'include',  // Important: allows cookies to be sent and received
             body: JSON.stringify({ username, email, password }),
         });
 

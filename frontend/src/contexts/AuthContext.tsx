@@ -1,9 +1,9 @@
 // src/contexts/AuthContext.tsx
-import { createContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useState, type ReactNode } from "react";
 
 type AuthContextType = {
-    token: string | null;
-    setToken: (token: string | null) => void;
+    isAuthenticated: boolean;
+    setIsAuthenticated: (isAuthenticated: boolean) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -13,19 +13,13 @@ type AuthProviderProps = {
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-    const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
-
-    // Sync localStorage and state
-    useEffect(() => {
-        if (token) {
-            localStorage.setItem("token", token);
-        } else {
-            localStorage.removeItem("token");
-        }
-    }, [token]);
+    // Track authentication state for UI purposes.
+    // The actual JWT token is stored securely in an httpOnly cookie managed by the browser,
+    // and is automatically sent with requests. JavaScript cannot access httpOnly cookies.
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
     return (
-        <AuthContext.Provider value={{ token, setToken }}>
+        <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
             {children}
         </AuthContext.Provider>
     );

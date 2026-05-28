@@ -35,9 +35,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final AuthenticationService authenticationService;
 
     /**
-     * Filters incoming HTTP requests to validate JWT tokens and set the authentication context if a valid token is
-     * found.
-     * @param request the incoming HTTP request that may contain a JWT token in the Authorization header, which will be
+     * Filters incoming HTTP requests to validate JWT tokens from cookies and set the authentication context
+     * if a valid token is found.
+     * @param request the incoming HTTP request that may contain a JWT token in an httpOnly cookie, which will be
      *                extracted and validated by the filter to authenticate the user for the request.
      * @param response the HTTP response that can be modified by the filter if needed, although in this implementation
      *                 it is not used
@@ -54,9 +54,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
-            // Extract the JWT token from the Authorization header of the incoming request.
-            // The token is expected to be in the format "Bearer <token>".
-            String token = extractToken(request);
+            // Extract the JWT token from the httpOnly cookie in the incoming request.
+            // The token is stored in a cookie named "authToken" for security and XSS protection.
+            String token = extractTokenFromCookie(request);
 
             if(token != null) {
                 // Validate the token using the AuthenticationService.
@@ -95,21 +95,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Extracts the JWT token from the Authorization header of the incoming HTTP request. The method checks if the
-     * Authorization header is present and starts with the "Bearer " prefix. If it does, it extracts and returns the
-     * token by removing the prefix. If the header is not present or does not contain a valid Bearer token, the method
-     * returns null, allowing the filter to determine whether to attempt authentication based on the presence of a
-     * token.
-     * @param request the incoming HTTP request that may contain the Authorization header with the JWT token, which will
-     *                be parsed
-     * @return the extracted JWT token if the Authorization header is valid and contains a Bearer token, or null if the
-     *         header is not present or does not contain a valid Bearer token, allowing the filter to determine whether
-     *         to attempt authentication based on the presence of a token.
+     * Extracts the JWT token from the httpOnly authentication cookie in the incoming HTTP request.
+     * The method iterates through all cookies to find the one named "authToken". If found, it returns the cookie value.
+     * If the cookie is not found, the method returns null, allowing the filter to determine whether to attempt
+     * authentication based on the presence of a token.
+     * @param request the incoming HTTP request that may contain the httpOnly "authToken" cookie with the JWT token
+     * @return the extracted JWT token if the "authToken" cookie is found, or null if the cookie is not present or if
+     *         the request contains no cookies, allowing the filter to determine whether to attempt authentication based
+     *         on the presence of a token.
      */
-    private String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+    private String extractTokenFromCookie(HttpServletRequest request) {
+        jakarta.servlet.http.Cookie[] cookies = request.getCookies();
+        if(cookies != null) {
+            for(jakarta.servlet.http.Cookie cookie : cookies) {
+                if("authToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
         }
         return null;
     }

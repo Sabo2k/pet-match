@@ -3,15 +3,42 @@ import logo from "../assets/logo.png";
 
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/useAuth";
+import { toaster } from "@/components/ui/toaster";
 
 
 function Navbar() {
-  const { token, setToken } = useAuth();
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    setToken(null);
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      // Call logout endpoint to clear the httpOnly cookie on the backend
+      await fetch("http://localhost:8080/api/v1/auth/logout", {
+        method: "POST",
+        credentials: 'include',  // Important: send the cookie to the server
+      });
+
+      // Update the authentication state
+      setIsAuthenticated(false);
+      
+      // Redirect to login page
+      navigate("/login");
+      
+      toaster.create({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+        type: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toaster.create({
+        title: "Logout Error",
+        description: "Failed to logout. Please try again.",
+        type: "error",
+        duration: 3000,
+      });
+    }
   };
 
   return (
@@ -25,7 +52,7 @@ function Navbar() {
         <Spacer />
 
         {/* Conditionally render Avatar or Login/Sign Up Buttons */}
-        {token ? (
+        {isAuthenticated ? (
           <>
             <AvatarGroup>
                 <Avatar.Root>
