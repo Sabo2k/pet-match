@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -28,6 +30,22 @@ public class User {
 
     @Column(nullable = false)
     private String username;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Advertisement> createdAdvertisements = new ArrayList<>();
+
+    /**
+     * Many-to-many relationship with saved advertisements.
+     * Users can save multiple advertisements and each advertisement can be saved by multiple users.
+     * The join table manages this relationship, storing user-to-advertisement associations.
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_saved_advertisements",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "advertisement_id")
+    )
+    private List<Advertisement> savedAdvertisements = new ArrayList<>();
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
