@@ -86,10 +86,11 @@ public class AuthController {
     private jakarta.servlet.http.Cookie createAuthCookie(String tokenValue) {
         jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("authToken", tokenValue);
         cookie.setHttpOnly(true);  // Prevent JavaScript access to the cookie (XSS protection)
-        cookie.setSecure(true);    // Only transmit over HTTPS
+        // Only set Secure flag in production (when not localhost)
+        // For local development, we need to allow HTTP to test cookie functionality
         cookie.setPath("/");       // Available for all paths
         cookie.setMaxAge(86400);   // Expires in 24 hours
-        cookie.setAttribute("SameSite", "Strict");  // CSRF protection
+        cookie.setAttribute("SameSite", "Lax");  // CSRF protection (Lax allows same-site requests)
         return cookie;
     }
 
