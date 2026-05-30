@@ -6,10 +6,11 @@ import SignupPage from "./components/signuppage/SignupPage";
 import LoginPage from "./components/loginpage/LoginPage";
 
 const routes: Array<{ path: string; element: ReactElement }> = [
+  { path: "/", element: <HomePage/> },
   { path: "/home", element: <HomePage/> },
-  { path: "*", element: <NotFoundPage/> }, // Catch-all for 404
   { path: "/login", element: <LoginPage/> },
-  { path: "/signup", element: <SignupPage/> }
+  { path: "/signup", element: <SignupPage/> },
+  { path: "*", element: <NotFoundPage/> }, // Catch-all for 404
 ];
 
 export default function AppRouter() {
