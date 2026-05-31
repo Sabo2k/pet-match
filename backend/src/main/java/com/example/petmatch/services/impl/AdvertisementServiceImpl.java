@@ -3,14 +3,17 @@ package com.example.petmatch.services.impl;
 import com.example.petmatch.domain.CreateAdvertisementRequest;
 import com.example.petmatch.domain.UpdateAdvertisementRequest;
 import com.example.petmatch.domain.entities.Advertisement;
+import com.example.petmatch.domain.entities.Image;
 import com.example.petmatch.domain.entities.User;
 import com.example.petmatch.repositories.AdvertisementRepository;
+import com.example.petmatch.repositories.ImageRepository;
 import com.example.petmatch.services.AdvertisementService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +22,7 @@ import java.util.UUID;
 public class AdvertisementServiceImpl implements AdvertisementService {
 
     private final AdvertisementRepository advertisementRepository;
+    private final ImageRepository imageRepository;
 
     @Override
     public List<Advertisement> getAllAdvertisements() {
@@ -41,7 +45,25 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         newAdvertisement.setPrice(advertisementRequest.getPrice());
         newAdvertisement.setLocation(advertisementRequest.getLocation());
         newAdvertisement.setAuthor(user);
-        return advertisementRepository.save(newAdvertisement);
+        newAdvertisement.setImages(new ArrayList<>());
+        
+        Advertisement savedAdvertisement = advertisementRepository.save(newAdvertisement);
+        
+        // Create and associate images if provided
+        if (advertisementRequest.getImages() != null && !advertisementRequest.getImages().isEmpty()) {
+            List<Image> images = new ArrayList<>();
+            for (CreateAdvertisementRequest.CreateImageRequest imageRequest : advertisementRequest.getImages()) {
+                Image image = Image.builder()
+                        .imageUrl(imageRequest.getUrl())
+                        .isPrimary(imageRequest.isPrimary())
+                        .advertisement(savedAdvertisement)
+                        .build();
+                images.add(imageRepository.save(image));
+            }
+            savedAdvertisement.setImages(images);
+        }
+        
+        return savedAdvertisement;
     }
 
     @Override

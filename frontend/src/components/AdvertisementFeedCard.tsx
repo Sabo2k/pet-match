@@ -2,12 +2,19 @@ import { Card, Image, Text, Heading, Box, Link } from "@chakra-ui/react";
 import DropDownButton from "./DropDownButton";
 import type { AdvertisementDto } from "../hooks/useAdvertisements";
 
+const DEFAULT_IMAGE = "https://t4.ftcdn.net/jpg/19/64/05/65/360_F_1964056578_wad19lbTilPQIGgB4W1cvavaSVGAFWtn.jpg";
+
 export default function AdvertisementFeedCard({ 
     advertisement 
 }: { 
     advertisement: AdvertisementDto 
 }) {
-    const { title, description } = advertisement;
+    const { title, description, images } = advertisement;
+    
+    // Get the primary image or fall back to the first image or use fallback
+    const displayImage = images?.find(img => img.isPrimary)?.imageUrl 
+        || images?.[0]?.imageUrl 
+        || DEFAULT_IMAGE;
     
     return (
         <Card.Root 
@@ -20,7 +27,7 @@ export default function AdvertisementFeedCard({
         >
             <Link href="/advertisement">
                 <Image
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN2z0ERwXQUqH29urPuzWueLXKhJAY6SMyAA&s"
+                    src={displayImage}
                     alt={title}
                     objectFit="cover"
                     height="180px"

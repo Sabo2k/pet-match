@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -21,6 +22,7 @@ public class AdvertisementDto {
     private double price;
     private String location;
     private AuthorDto author;
+    private List<ImageDto> images;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
