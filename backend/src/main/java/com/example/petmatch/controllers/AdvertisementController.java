@@ -4,6 +4,7 @@ import com.example.petmatch.domain.CreateAdvertisementRequest;
 import com.example.petmatch.domain.UpdateAdvertisementRequest;
 import com.example.petmatch.domain.dtos.AdvertisementDto;
 import com.example.petmatch.domain.dtos.AuthorDto;
+import com.example.petmatch.domain.dtos.ImageDto;
 import com.example.petmatch.domain.entities.Advertisement;
 import com.example.petmatch.domain.entities.User;
 import com.example.petmatch.security.AdvertisementUserDetails;
@@ -104,6 +105,15 @@ public class AdvertisementController {
                     .build();
         }
 
+        List<ImageDto> imageDtos = advertisement.getImages().stream()
+                .map(image -> ImageDto.builder()
+                        .id(image.getId())
+                        .imageUrl(image.getImageUrl())
+                        .isPrimary(image.isPrimary())
+                        .createdAt(image.getCreatedAt())
+                        .build())
+                .toList();
+
         return AdvertisementDto.builder()
                 .id(advertisement.getId())
                 .title(advertisement.getTitle())
@@ -112,6 +122,7 @@ public class AdvertisementController {
                 .price(advertisement.getPrice())
                 .location(advertisement.getLocation())
                 .author(authorDto)
+                .images(imageDtos)
                 .createdAt(advertisement.getCreatedAt())
                 .updatedAt(advertisement.getUpdatedAt())
                 .build();

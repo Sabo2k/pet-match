@@ -5,6 +5,13 @@ export interface AuthorDto {
     username: string;
 }
 
+export interface ImageDto {
+    id: string;
+    imageUrl: string;
+    isPrimary: boolean;
+    createdAt: string;
+}
+
 export interface AdvertisementDto {
     id: string;
     title: string;
@@ -13,6 +20,7 @@ export interface AdvertisementDto {
     price: number;
     location: string;
     author: AuthorDto;
+    images: ImageDto[];
     createdAt: string;
     updatedAt: string;
 }

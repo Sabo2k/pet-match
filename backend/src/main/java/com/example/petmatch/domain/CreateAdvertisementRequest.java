@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,4 +17,14 @@ public class CreateAdvertisementRequest {
     private int age;
     private double price;
     private String location;
+    private List<CreateImageRequest> images;
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class CreateImageRequest {
+        private String url;
+        private boolean isPrimary;
+    }
 }
