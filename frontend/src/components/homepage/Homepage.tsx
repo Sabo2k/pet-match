@@ -2,17 +2,18 @@ import { Box, Spinner, Text } from "@chakra-ui/react";
 import AdvertisementFeedCard from "../AdvertisementFeedCard";
 import Navbar from "../navbar/Navbar";
 import { useAdvertisements } from "../../hooks/useAdvertisements";
-
+import CreateAdvertisementButton from "./CreateAdvertisementButton";
 /**
  * 
  * @returns JSX element
  */
 export default function HomePage() {
     const { data: advertisements, isLoading, error } = useAdvertisements();
-
+    
     return (
         <>
             <Navbar/>
+            <CreateAdvertisementButton/>
             <Box p={6}>
                 {isLoading && (
                     <Box display="flex" justifyContent="center" alignItems="center" minH="400px">
