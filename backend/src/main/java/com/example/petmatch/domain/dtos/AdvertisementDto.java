@@ -22,6 +22,7 @@ public class AdvertisementDto {
     private double price;
     private String location;
     private AuthorDto author;
+    private CategoryDto category;
     private List<ImageDto> images;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

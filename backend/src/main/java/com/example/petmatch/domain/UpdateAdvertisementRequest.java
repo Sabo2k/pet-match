@@ -18,4 +18,5 @@ public class UpdateAdvertisementRequest {
     private int age;
     private double price;
     private String location;
+    private UUID categoryId;
 }
