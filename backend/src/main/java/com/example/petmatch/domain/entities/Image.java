@@ -38,8 +38,9 @@ public class Image {
     /**
      * URL or file path where the image is stored.
      * This could be a local file path, S3 URL, or any other image storage location.
+     * Uses TEXT type to support large base64-encoded images.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String imageUrl;
 
     /**
