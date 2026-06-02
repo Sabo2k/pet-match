@@ -47,6 +47,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         newAdvertisement.setPrice(advertisementRequest.getPrice());
         newAdvertisement.setLocation(advertisementRequest.getLocation());
         newAdvertisement.setAuthor(user);
+        
+        // Set the category if provided
+        if (advertisementRequest.getCategoryId() != null) {
+            newAdvertisement.setCategory(categoryService.getCategoryById(advertisementRequest.getCategoryId()));
+        }
+        
         newAdvertisement.setImages(new ArrayList<>());
         
         Advertisement savedAdvertisement = advertisementRepository.save(newAdvertisement);
