@@ -13,6 +13,7 @@ import { useAuth } from "../../contexts/useAuth";
 import { useState, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import ImageDropZone from "./ImageDropZone";
+import CategorySelect from "./CategorySelect";
 
 export default function CreateAdvertisementButton() {
     const { isAuthenticated } = useAuth();
@@ -22,6 +23,7 @@ export default function CreateAdvertisementButton() {
     const [age, setAge] = useState("");
     const [price, setPrice] = useState("");
     const [location, setLocation] = useState("");
+    const [categoryId, setCategoryId] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
@@ -56,7 +58,8 @@ export default function CreateAdvertisementButton() {
             !description.trim() ||
             !age.trim() ||
             !price.trim() ||
-            !location.trim()
+            !location.trim() ||
+            !categoryId.trim()
         ) {
             toaster.create({
                 title: "Missing Fields",
@@ -86,6 +89,7 @@ export default function CreateAdvertisementButton() {
                     age: parseInt(age),
                     price: parseFloat(price),
                     location: location.trim(),
+                    categoryId: categoryId.trim(),
                     images: images,
                 }),
             });
@@ -109,6 +113,7 @@ export default function CreateAdvertisementButton() {
             setAge("");
             setPrice("");
             setLocation("");
+            setCategoryId("");
             setSelectedFiles([]);
 
             // Close dialog
@@ -190,6 +195,10 @@ export default function CreateAdvertisementButton() {
                                     onChange={(e) =>
                                         setLocation(e.target.value)
                                     }
+                                />
+                                <CategorySelect
+                                    value={categoryId}
+                                    onChange={(id) => setCategoryId(id)}
                                 />
                                 <ImageDropZone onFilesSelected={setSelectedFiles} />
                             </Dialog.Body>

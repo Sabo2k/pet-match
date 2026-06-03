@@ -8,6 +8,7 @@ import com.example.petmatch.domain.entities.User;
 import com.example.petmatch.repositories.AdvertisementRepository;
 import com.example.petmatch.repositories.ImageRepository;
 import com.example.petmatch.services.AdvertisementService;
+import com.example.petmatch.services.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     private final AdvertisementRepository advertisementRepository;
     private final ImageRepository imageRepository;
+    private final CategoryService categoryService;
 
     @Override
     public List<Advertisement> getAllAdvertisements() {
@@ -45,6 +47,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         newAdvertisement.setPrice(advertisementRequest.getPrice());
         newAdvertisement.setLocation(advertisementRequest.getLocation());
         newAdvertisement.setAuthor(user);
+        
+        // Set the category if provided
+        if (advertisementRequest.getCategoryId() != null) {
+            newAdvertisement.setCategory(categoryService.getCategoryById(advertisementRequest.getCategoryId()));
+        }
+        
         newAdvertisement.setImages(new ArrayList<>());
         
         Advertisement savedAdvertisement = advertisementRepository.save(newAdvertisement);
