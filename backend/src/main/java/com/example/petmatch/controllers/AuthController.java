@@ -6,7 +6,9 @@ import com.example.petmatch.services.AuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -101,6 +103,14 @@ public class AuthController {
      * @param response the HTTP response object used to clear the authentication cookie.
      * @return a ResponseEntity with success status indicating the user has been logged out.
      */
+    @GetMapping("/me")
+    public ResponseEntity<Void> me(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
         // Create a cookie with the same name and path but with maxAge set to 0 to delete it
