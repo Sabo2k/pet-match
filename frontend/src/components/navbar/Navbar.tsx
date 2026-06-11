@@ -15,7 +15,7 @@ import { useAuth } from "@/contexts/useAuth";
 import { toaster } from "@/components/ui/toaster";
 
 function Navbar() {
-    const { isAuthenticated, setIsAuthenticated } = useAuth();
+    const { isAuthenticated, isAuthLoading, setIsAuthenticated } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -58,30 +58,32 @@ function Navbar() {
                 </Link>
                 <Spacer />
                 {/* Conditionally render Avatar or Login/Sign Up Buttons */}
-                {isAuthenticated ? (
-                    <>
-                        <AvatarGroup>
-                            <Avatar.Root>
-                                <Avatar.Fallback />
-                                <Avatar.Image />
-                            </Avatar.Root>
-                        </AvatarGroup>
+                {!isAuthLoading && (
+                    isAuthenticated ? (
+                        <>
+                            <AvatarGroup>
+                                <Avatar.Root>
+                                    <Avatar.Fallback />
+                                    <Avatar.Image />
+                                </Avatar.Root>
+                            </AvatarGroup>
 
-                        <Button onClick={handleLogout} colorPalette="red">
-                            Logout
-                        </Button>
-                    </>
-                ) : (
-                    <>
-                        <Link href="/login" style={{ textDecoration: "none" }}>
-                            <Button variant="outline" mr={3}>
-                                Login
+                            <Button onClick={handleLogout} colorPalette="red">
+                                Logout
                             </Button>
-                        </Link>
-                        <Link href="/signup" style={{ textDecoration: "none" }}>
-                            <Button colorScheme="purple">Sign Up</Button>
-                        </Link>
-                    </>
+                        </>
+                    ) : (
+                        <>
+                            <Link href="/login" style={{ textDecoration: "none" }}>
+                                <Button variant="outline" mr={3}>
+                                    Login
+                                </Button>
+                            </Link>
+                            <Link href="/signup" style={{ textDecoration: "none" }}>
+                                <Button colorScheme="purple">Sign Up</Button>
+                            </Link>
+                        </>
+                    )
                 )}
             </Flex>
         </Box>
