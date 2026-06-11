@@ -68,7 +68,7 @@ export default function LoginPage() {
             });
 
             // Redirect to home or dashboard
-            navigate("/home");
+            navigate("/");
         } 
         catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : "Login failed. Please try again.";

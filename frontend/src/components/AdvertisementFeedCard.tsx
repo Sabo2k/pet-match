@@ -17,15 +17,15 @@ export default function AdvertisementFeedCard({
         || DEFAULT_IMAGE;
     
     return (
-        <Card.Root 
-            width="300px" 
-            overflow="hidden"             
+        <Card.Root
+            width="300px"
+            overflow="hidden"
             _hover={{
                 boxShadow: "lg",
                 transition: "box-shadow 0.1s",
             }}
         >
-            <Link href="/advertisement">
+            <Link href={`/advertisement/${advertisement.id}`}>
                 <Image
                     src={displayImage}
                     alt={title}
@@ -35,13 +35,13 @@ export default function AdvertisementFeedCard({
                 />
             </Link>
             <Card.Body>
-                <Box 
-                    display="flex" 
-                    justifyContent="space-between" 
+                <Box
+                    display="flex"
+                    justifyContent="space-between"
                     alignItems="flex-start"
                 >
                     <Box flex="1" mr={2}>
-                        <Link href="/advertisement">
+                        <Link href={`/advertisement/${advertisement.id}`}>
                             <Heading size="md" mb={1}>{title}</Heading>
                         </Link>
                         <Text color="gray.600" fontSize="sm" lineClamp="2">
