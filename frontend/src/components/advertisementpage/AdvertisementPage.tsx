@@ -1,8 +1,32 @@
 import { useParams } from "react-router-dom";
-import { Box, Spinner, Text } from "@chakra-ui/react";
+import { Box, Button, Card, Flex, Heading, HStack, SimpleGrid, Spinner, Stack, Text } from "@chakra-ui/react";
+import { LuCalendar, LuDollarSign, LuMapPin, LuUser } from "react-icons/lu";
 import Navbar from "../navbar/Navbar";
 import ImageCarousel from "./ImageCarousel";
 import { useAdvertisementById } from "../../hooks/useAdvertisements";
+import SaveButton from "../SaveButton";
+
+function InfoCard({ label, value, icon: IconComponent }: { label: string; value: string | number; icon: React.ElementType }) {
+    return (
+        <Card.Root>
+            <Card.Body>
+                <Flex align="center" gap={3}>
+                    <Box color="teal.500" fontSize="2xl">
+                        <IconComponent />
+                    </Box>
+                    <Box>
+                        <Text fontSize="xs" color="gray.500" fontWeight="semibold" textTransform="uppercase" letterSpacing="wide">
+                            {label}
+                        </Text>
+                        <Text fontWeight="semibold" fontSize="md" color="gray.700">
+                            {value}
+                        </Text>
+                    </Box>
+                </Flex>
+            </Card.Body>
+        </Card.Root>
+    );
+}
 
 export default function AdvertisementPage() {
     const { id } = useParams<{ id: string }>();
@@ -10,12 +34,12 @@ export default function AdvertisementPage() {
 
     return (
         <>
-            <Navbar/>
-            <Box p={6}>
+            <Navbar />
+            <Box p={8} maxW="1200px" mx="auto">
                 {isLoading && (
-                    <Box display="flex" justifyContent="center" alignItems="center" minH="400px">
+                    <Flex justifyContent="center" alignItems="center" minH="400px">
                         <Spinner size="lg" />
-                    </Box>
+                    </Flex>
                 )}
 
                 {error && (
@@ -25,31 +49,36 @@ export default function AdvertisementPage() {
                 )}
 
                 {advertisement && (
-                    <Box>
-                        <ImageCarousel images={advertisement.images} />
-                        <Box mt={6}>
-                            <Text fontSize="2xl" fontWeight="bold">
-                                {advertisement.title}
-                            </Text>
-                            <Text mt={2} color="gray.600">
-                                {advertisement.description}
-                            </Text>
-                            <Box mt={4} display="flex" gap={4}>
-                                <Text>
-                                    <strong>Age:</strong> {advertisement.age}
-                                </Text>
-                                <Text>
-                                    <strong>Price:</strong> ${advertisement.price}
-                                </Text>
-                                <Text>
-                                    <strong>Location:</strong> {advertisement.location}
-                                </Text>
+                    <Stack gap={6}>
+                        <HStack align="start" gap={8}>
+                            <Box flex="1">
+                                <ImageCarousel images={advertisement.images} />
                             </Box>
-                            <Text mt={4}>
-                                <strong>Posted by:</strong> {advertisement.author.username}
-                            </Text>
-                        </Box>
-                    </Box>
+                            <Stack flex="1" gap={4}>
+                                <Heading fontWeight="bold" color="gray.700" size="2xl">
+                                    {advertisement.title}
+                                </Heading>
+                                <Card.Root>
+                                    <Card.Body>
+                                        <Card.Title color="gray.600" mb={2}>Description</Card.Title>
+                                        <Card.Description>{advertisement.description}</Card.Description>
+                                    </Card.Body>
+                                </Card.Root>
+                            </Stack>
+                        </HStack>
+
+                        <SimpleGrid columns={4} gap={4}>
+                            <InfoCard label="Age" value={advertisement.age} icon={LuCalendar} />
+                            <InfoCard label="Price" value={`$${advertisement.price}`} icon={LuDollarSign} />
+                            <InfoCard label="Location" value={advertisement.location} icon={LuMapPin} />
+                            <InfoCard label="Author" value={advertisement.author.username} icon={LuUser} />
+                        </SimpleGrid>
+
+                        <Flex gap={3} justify="flex-end">
+                            <SaveButton />
+                            <Button colorPalette="teal">Contact</Button>
+                        </Flex>
+                    </Stack>
                 )}
             </Box>
         </>

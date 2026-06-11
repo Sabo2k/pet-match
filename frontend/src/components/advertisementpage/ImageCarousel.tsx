@@ -13,7 +13,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
 
     return (
         <>
-        <Carousel.Root slideCount={images.length} maxW="2xl" gap="4">
+        <Carousel.Root slideCount={images.length} gap="4" >
             <Carousel.Control justifyContent="center" gap="4" width="full">
                 <Carousel.PrevTrigger asChild>
                     <IconButton size="xs" variant="outline">
