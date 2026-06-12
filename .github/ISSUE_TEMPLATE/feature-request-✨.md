@@ -1,8 +1,8 @@
 ---
-name: Feature request
+name: Feature request ✨
 about: Suggest an idea for this project
 title: ''
-labels: ''
+labels: "status: open \U0001F3C1, type: feature ✨"
 assignees: ''
 
 ---
