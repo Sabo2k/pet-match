@@ -80,7 +80,7 @@ function Navbar() {
                                 </Button>
                             </Link>
                             <Link href="/signup" style={{ textDecoration: "none" }}>
-                                <Button colorScheme="purple">Sign Up</Button>
+                                <Button colorPalette="purple">Sign Up</Button>
                             </Link>
                         </>
                     )

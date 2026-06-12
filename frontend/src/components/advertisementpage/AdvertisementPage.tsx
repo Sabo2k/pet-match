@@ -76,7 +76,7 @@ export default function AdvertisementPage() {
 
                         <Flex gap={3} justify="flex-end">
                             <SaveButton />
-                            <Button colorPalette="teal">Contact</Button>
+                            <Button colorPalette="purple">Contact</Button>
                         </Flex>
                     </Stack>
                 )}
