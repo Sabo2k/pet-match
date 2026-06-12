@@ -1,5 +1,6 @@
 package com.example.petmatch.services.impl;
 
+import com.example.petmatch.domain.dtos.UserProfileDto;
 import com.example.petmatch.domain.entities.Advertisement;
 import com.example.petmatch.domain.entities.User;
 import com.example.petmatch.repositories.AdvertisementRepository;
@@ -21,6 +22,16 @@ public class UserServiceImpl implements UserService {
     private final AdvertisementRepository advertisementRepository;
 
     @Override
+    public UserProfileDto getProfile(User user) {
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return UserProfileDto.builder()
+                .id(managedUser.getId())
+                .username(managedUser.getUsername())
+                .build();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<UUID> getSavedAdvertisementIds(User user) {
         User managedUser = userRepository.findById(user.getId())
@@ -28,6 +39,19 @@ public class UserServiceImpl implements UserService {
         return managedUser.getSavedAdvertisements().stream()
                 .map(Advertisement::getId)
                 .toList();
+    }
+
+    @Override
+    public List<Advertisement> getCreatedAdvertisements(User user) {
+        return advertisementRepository.findByAuthor_Id(user.getId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Advertisement> getSavedAdvertisementDetails(User user) {
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return List.copyOf(managedUser.getSavedAdvertisements());
     }
 
     @Override

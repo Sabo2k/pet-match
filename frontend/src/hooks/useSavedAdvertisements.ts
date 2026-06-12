@@ -29,7 +29,10 @@ export const useSaveAdvertisement = () => {
             }).then((res) => {
                 if (!res.ok) throw new Error("Failed to save advertisement");
             }),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["savedAdvertisements"] }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["savedAdvertisements"] });
+            queryClient.invalidateQueries({ queryKey: ["savedAdvertisementsDetails"] });
+        },
     });
 
     const unsave = useMutation({
@@ -40,7 +43,10 @@ export const useSaveAdvertisement = () => {
             }).then((res) => {
                 if (!res.ok) throw new Error("Failed to unsave advertisement");
             }),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["savedAdvertisements"] }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["savedAdvertisements"] });
+            queryClient.invalidateQueries({ queryKey: ["savedAdvertisementsDetails"] });
+        },
     });
 
     return { save, unsave };
