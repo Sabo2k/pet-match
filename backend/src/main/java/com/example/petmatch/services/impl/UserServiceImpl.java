@@ -42,8 +42,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserProfileDto getProfileById(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return UserProfileDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .build();
+    }
+
+    @Override
     public List<Advertisement> getCreatedAdvertisements(User user) {
         return advertisementRepository.findByAuthor_Id(user.getId());
+    }
+
+    @Override
+    public List<Advertisement> getAdvertisementsByUserId(UUID userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return advertisementRepository.findByAuthor_Id(userId);
     }
 
     @Override

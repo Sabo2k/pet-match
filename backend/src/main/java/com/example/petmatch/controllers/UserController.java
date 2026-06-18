@@ -29,6 +29,17 @@ public class UserController {
         return ResponseEntity.ok(userService.getProfile(getCurrentUser()));
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserProfileDto> getUserById(@PathVariable UUID userId) {
+        return ResponseEntity.ok(userService.getProfileById(userId));
+    }
+
+    @GetMapping("/{userId}/advertisements")
+    public ResponseEntity<List<AdvertisementDto>> getUserAdvertisements(@PathVariable UUID userId) {
+        List<Advertisement> ads = userService.getAdvertisementsByUserId(userId);
+        return ResponseEntity.ok(ads.stream().map(this::convertToDto).toList());
+    }
+
     @GetMapping("/me/created-advertisements")
     public ResponseEntity<List<AdvertisementDto>> getCreatedAdvertisements() {
         List<Advertisement> ads = userService.getCreatedAdvertisements(getCurrentUser());

@@ -79,7 +79,7 @@ function Navbar() {
                                 <Portal>
                                     <Menu.Positioner>
                                     <Menu.Content>
-                                        <Menu.Item value="profile" onClick={() => navigate("/profile")}>Profile</Menu.Item>
+                                        <Menu.Item value="userprofile" onClick={() => navigate("/userprofile")}>Profile</Menu.Item>
                                         <Menu.Item value="settings">Settings</Menu.Item>
                                         <Menu.Item value="logout" onClick={handleLogout} color="red.500">Logout</Menu.Item>
                                     </Menu.Content>
