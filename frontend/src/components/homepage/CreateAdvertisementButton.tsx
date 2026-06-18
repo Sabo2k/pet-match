@@ -29,6 +29,25 @@ export default function CreateAdvertisementButton() {
 
     const dialogRef = useRef<HTMLDivElement>(null);
 
+    const convertFilesToBase64 = async (files: File[]): Promise<{ url: string; isPrimary: boolean }[]> => {
+        const imageRequests = await Promise.all(
+            files.map((file, index) =>
+                new Promise<{ url: string; isPrimary: boolean }>((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        resolve({
+                            url: reader.result as string,
+                            isPrimary: index === 0, // First image is primary
+                        });
+                    };
+                    reader.onerror = () => reject(reader.error);
+                    reader.readAsDataURL(file);
+                })
+            )
+        );
+        return imageRequests;
+    };
+
     if (!isAuthenticated) {
         return null;
     }
@@ -52,29 +71,27 @@ export default function CreateAdvertisementButton() {
 
         setIsLoading(true);
         try {
+            // Convert selected files to base64 images
+            const images = selectedFiles.length > 0 
+                ? await convertFilesToBase64(selectedFiles)
+                : [];
+
             const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
-
-            const formData = new FormData();
-            formData.append(
-                "data",
-                new Blob(
-                    [JSON.stringify({
-                        title: title.trim(),
-                        description: description.trim(),
-                        age: parseInt(age),
-                        price: parseFloat(price),
-                        location: location.trim(),
-                        categoryId: categoryId.trim(),
-                    })],
-                    { type: "application/json" }
-                )
-            );
-            selectedFiles.forEach((file) => formData.append("images", file));
-
             const response = await fetch(`${apiUrl}/api/v1/advertisements`, {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
-                body: formData,
+                body: JSON.stringify({
+                    title: title.trim(),
+                    description: description.trim(),
+                    age: parseInt(age),
+                    price: parseFloat(price),
+                    location: location.trim(),
+                    categoryId: categoryId.trim(),
+                    images: images,
+                }),
             });
 
             if (!response.ok) {
