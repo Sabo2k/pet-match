@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
-import { BsBookmarkFill } from "react-icons/bs";
-import { FiBookmark } from "react-icons/fi";
 import { useAuth } from "../contexts/useAuth";
+import { FaRegHeart } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { useSavedAdvertisements, useSaveAdvertisement } from "../hooks/useSavedAdvertisements";
 
 export default function SaveButton({ advertisementId }: { advertisementId: string }) {
@@ -22,8 +22,12 @@ export default function SaveButton({ advertisementId }: { advertisementId: strin
     }
 
     return (
-        <Button onClick={handleClick} variant="outline" colorPalette="teal">
-            {isSaved ? <BsBookmarkFill /> : <FiBookmark />} {isSaved ? "Saved" : "Save"}
+        <Button 
+            onClick={handleClick} 
+            variant="outline" 
+            colorPalette="purple"
+        >
+            {isSaved ? <FaHeart /> : <FaRegHeart />} {isSaved ? "Saved" : "Save"}
         </Button>
     );
 }
