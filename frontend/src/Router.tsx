@@ -1,18 +1,20 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import NotFoundPage from "./components/notfoundpage/NotFoundPage";
 import type { ReactElement } from "react";
-import HomePage from "./components/homepage/HomePage";
+import HomePage from "./components/homepage/Homepage";
 import SignupPage from "./components/signuppage/SignupPage";
 import LoginPage from "./components/loginpage/LoginPage";
 import AdvertisementPage from "./components/advertisementpage/AdvertisementPage";
 import UserProfilePage from "./components/userprofilepage/UserProfilePage";
+import ProfilePage from "./components/profilepage/ProfilePage";
 
 const routes: Array<{ path: string; element: ReactElement }> = [
     { path: "/", element: <HomePage/> },
     { path: "/login", element: <LoginPage/> },
     { path: "/signup", element: <SignupPage/> },
     { path: "/advertisement/:id", element: <AdvertisementPage/> },
-    { path: "/profile", element: <UserProfilePage/> },
+    { path: "/userprofile", element: <UserProfilePage/> },
+    { path: "/profile/:userId", element: <ProfilePage/>},
     { path: "*", element: <NotFoundPage/> }, // Catch-all for 404
 ];
 

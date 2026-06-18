@@ -99,6 +99,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/advertisements").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/{userId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/{userId}/advertisements").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
