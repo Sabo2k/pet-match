@@ -75,8 +75,8 @@ export default function AdvertisementPage() {
                         </SimpleGrid>
 
                         <Flex gap={3} justify="flex-end">
-                            <SaveButton />
-                            <Button colorPalette="teal">Contact</Button>
+                            <SaveButton advertisementId={id || ""} />
+                            <Button colorPalette="purple">Contact</Button>
                         </Flex>
                     </Stack>
                 )}

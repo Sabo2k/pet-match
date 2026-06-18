@@ -5,13 +5,15 @@ import HomePage from "./components/homepage/HomePage";
 import SignupPage from "./components/signuppage/SignupPage";
 import LoginPage from "./components/loginpage/LoginPage";
 import AdvertisementPage from "./components/advertisementpage/AdvertisementPage";
+import UserProfilePage from "./components/userprofilepage/UserProfilePage";
 
 const routes: Array<{ path: string; element: ReactElement }> = [
-  { path: "/", element: <HomePage/> },
-  { path: "/login", element: <LoginPage/> },
-  { path: "/signup", element: <SignupPage/> },
-  { path: "/advertisement/:id", element: <AdvertisementPage/> },
-  { path: "*", element: <NotFoundPage/> }, // Catch-all for 404
+    { path: "/", element: <HomePage/> },
+    { path: "/login", element: <LoginPage/> },
+    { path: "/signup", element: <SignupPage/> },
+    { path: "/advertisement/:id", element: <AdvertisementPage/> },
+    { path: "/profile", element: <UserProfilePage/> },
+    { path: "*", element: <NotFoundPage/> }, // Catch-all for 404
 ];
 
 export default function AppRouter() {

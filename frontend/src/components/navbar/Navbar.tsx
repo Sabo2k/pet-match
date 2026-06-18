@@ -7,6 +7,8 @@ import {
     Link,
     Avatar,
     AvatarGroup,
+    Menu,
+    Portal,
 } from "@chakra-ui/react";
 import logo from "../assets/logo.png";
 
@@ -38,8 +40,12 @@ function Navbar() {
                 type: "success",
                 duration: 3000,
             });
-        } catch (error) {
+
+        } 
+        catch(error) {
+            
             console.error("Logout failed:", error);
+
             toaster.create({
                 title: "Logout Error",
                 description: "Failed to logout. Please try again.",
@@ -61,16 +67,25 @@ function Navbar() {
                 {!isAuthLoading && (
                     isAuthenticated ? (
                         <>
-                            <AvatarGroup>
-                                <Avatar.Root>
-                                    <Avatar.Fallback />
-                                    <Avatar.Image />
-                                </Avatar.Root>
-                            </AvatarGroup>
-
-                            <Button onClick={handleLogout} colorPalette="red">
-                                Logout
-                            </Button>
+                            <Menu.Root>
+                                <Menu.Trigger>
+                                    <AvatarGroup>
+                                        <Avatar.Root>
+                                            <Avatar.Fallback />
+                                            <Avatar.Image />
+                                        </Avatar.Root>
+                                    </AvatarGroup>
+                                </Menu.Trigger>
+                                <Portal>
+                                    <Menu.Positioner>
+                                    <Menu.Content>
+                                        <Menu.Item value="profile" onClick={() => navigate("/profile")}>Profile</Menu.Item>
+                                        <Menu.Item value="settings">Settings</Menu.Item>
+                                        <Menu.Item value="logout" onClick={handleLogout} color="red.500">Logout</Menu.Item>
+                                    </Menu.Content>
+                                    </Menu.Positioner>
+                                </Portal>
+                            </Menu.Root>
                         </>
                     ) : (
                         <>
@@ -80,7 +95,9 @@ function Navbar() {
                                 </Button>
                             </Link>
                             <Link href="/signup" style={{ textDecoration: "none" }}>
-                                <Button colorScheme="purple">Sign Up</Button>
+                                <Button colorPalette="purple">
+                                    Sign Up
+                                </Button>
                             </Link>
                         </>
                     )
