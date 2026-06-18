@@ -2,6 +2,11 @@ import { IconButton, Carousel, Image } from "@chakra-ui/react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import type { ImageDto } from "../../hooks/useAdvertisements";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
+const resolveImageUrl = (url: string) =>
+    url.startsWith("/") ? `${API_URL}${url}` : url;
+
 interface ImageCarouselProps {
     images: ImageDto[];
 }
@@ -26,7 +31,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
                         <Carousel.Item key={image.id} index={index}>
                             <Image
                                 aspectRatio="16/9"
-                                src={image.imageUrl}
+                                src={resolveImageUrl(image.imageUrl)}
                                 alt="Advertisement image"
                                 w="100%"
                                 h="100%"
@@ -57,7 +62,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
                         <Image
                             w="20"
                             aspectRatio="16/9"
-                            src={image.imageUrl}
+                            src={resolveImageUrl(image.imageUrl)}
                             alt="Advertisement thumbnail"
                             objectFit="cover"
                         />

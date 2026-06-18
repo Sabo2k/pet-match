@@ -24,6 +24,7 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Builder.Default
     @OneToMany(mappedBy = "category")
     private List<Advertisement> advertisements = new ArrayList<>();
 
