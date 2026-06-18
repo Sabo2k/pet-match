@@ -52,6 +52,7 @@ public class Advertisement {
      * orphanRemoval = true ensures that removing an image from the list also deletes it from the database.
      * FetchType.LAZY is used to optimize queries by loading images only when needed.
      */
+    @Builder.Default
     @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 

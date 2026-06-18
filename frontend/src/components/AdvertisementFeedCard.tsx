@@ -5,6 +5,10 @@ import HeartButton from "./HeartButton";
 import type { AdvertisementDto } from "../hooks/useAdvertisements";
 
 const DEFAULT_IMAGE = "https://t4.ftcdn.net/jpg/19/64/05/65/360_F_1964056578_wad19lbTilPQIGgB4W1cvavaSVGAFWtn.jpg";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
+const resolveImageUrl = (url: string) =>
+    url.startsWith("/") ? `${API_URL}${url}` : url;
 
 export default function AdvertisementFeedCard({
     advertisement
@@ -14,10 +18,9 @@ export default function AdvertisementFeedCard({
     const { title, description, images } = advertisement;
     const [isHovered, setIsHovered] = useState(false);
 
-    // Get the primary image or fall back to the first image or use fallback
-    const displayImage = images?.find(img => img.isPrimary)?.imageUrl
-        || images?.[0]?.imageUrl
-        || DEFAULT_IMAGE;
+    const rawImage = images?.find(img => img.isPrimary)?.imageUrl
+        || images?.[0]?.imageUrl;
+    const displayImage = rawImage ? resolveImageUrl(rawImage) : DEFAULT_IMAGE;
 
     return (
         <Card.Root
