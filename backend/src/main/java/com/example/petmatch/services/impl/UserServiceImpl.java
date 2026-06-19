@@ -8,6 +8,7 @@ import com.example.petmatch.repositories.UserRepository;
 import com.example.petmatch.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final AdvertisementRepository advertisementRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserProfileDto getProfile(User user) {
@@ -28,6 +30,7 @@ public class UserServiceImpl implements UserService {
         return UserProfileDto.builder()
                 .id(managedUser.getId())
                 .username(managedUser.getUsername())
+                .email(managedUser.getEmail())
                 .build();
     }
 
@@ -93,6 +96,39 @@ public class UserServiceImpl implements UserService {
         User managedUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         managedUser.getSavedAdvertisements().removeIf(a -> a.getId().equals(advertisementId));
+        userRepository.save(managedUser);
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(User user, String currentPassword, String newPassword) {
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (!passwordEncoder.matches(currentPassword, managedUser.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+        managedUser.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(managedUser);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAccount(User user) {
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        managedUser.getSavedAdvertisements().clear();
+        userRepository.delete(managedUser);
+    }
+
+    @Override
+    @Transactional
+    public void changeEmail(User user, String newEmail) {
+        if (userRepository.findByEmail(newEmail).isPresent()) {
+            throw new IllegalArgumentException("Email is already in use");
+        }
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        managedUser.setEmail(newEmail);
         userRepository.save(managedUser);
     }
 }
