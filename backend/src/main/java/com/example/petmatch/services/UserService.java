@@ -16,4 +16,7 @@ public interface UserService {
     List<Advertisement> getSavedAdvertisementDetails(User user);
     void saveAdvertisement(User user, UUID advertisementId);
     void unsaveAdvertisement(User user, UUID advertisementId);
+    void changeEmail(User user, String newEmail);
+    void changePassword(User user, String currentPassword, String newPassword);
+    void deleteAccount(User user);
 }

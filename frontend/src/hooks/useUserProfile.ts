@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AdvertisementDto } from "./useAdvertisements";
 
 const API_BASE = "http://localhost:8080/api/v1";
@@ -6,6 +6,7 @@ const API_BASE = "http://localhost:8080/api/v1";
 export interface UserProfileDto {
     id: string;
     username: string;
+    email: string;
 }
 
 const fetchCurrentUser = async (): Promise<UserProfileDto> => {
@@ -77,5 +78,58 @@ export const useUserAdvertisements = (userId: string) => {
         queryFn: () => fetchUserAdvertisements(userId),
         enabled: !!userId,
         staleTime: 5 * 60 * 1000,
+    });
+};
+
+export const useDeleteAccount = () => {
+    return useMutation({
+        mutationFn: async () => {
+            const response = await fetch(`${API_BASE}/users/me`, {
+                method: "DELETE",
+                credentials: "include",
+            });
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text || "Failed to delete account");
+            }
+        },
+    });
+};
+
+export const useChangePassword = () => {
+    return useMutation({
+        mutationFn: async ({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }) => {
+            const response = await fetch(`${API_BASE}/users/me/password`, {
+                method: "PATCH",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ currentPassword, newPassword }),
+            });
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text || "Failed to update password");
+            }
+        },
+    });
+};
+
+export const useChangeEmail = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (newEmail: string) => {
+            const response = await fetch(`${API_BASE}/users/me/email`, {
+                method: "PATCH",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ newEmail }),
+            });
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text || "Failed to update email");
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+        },
     });
 };
