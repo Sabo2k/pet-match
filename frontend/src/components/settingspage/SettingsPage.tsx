@@ -1,15 +1,16 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Flex, Heading } from "@chakra-ui/react";
 import Navbar from "../navbar/Navbar";
 import SettingsTabs from "./SettingsTabs";
-
 
 export default function SettingsPage() {
     return (
         <>
-            <Navbar/>
-            <Heading fontWeight="bold">Settings</Heading>
+            <Navbar />
             <Box p={10}>
-            <SettingsTabs/>
+                <Flex>
+                    <Heading fontWeight="bold">Settings</Heading>
+                </Flex>
+                <SettingsTabs />
             </Box>
         </>
     );
