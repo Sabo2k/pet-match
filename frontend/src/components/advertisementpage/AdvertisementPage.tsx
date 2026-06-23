@@ -4,7 +4,9 @@ import { LuCalendar, LuDollarSign, LuMapPin, LuUser } from "react-icons/lu";
 import Navbar from "../navbar/Navbar";
 import ImageCarousel from "./ImageCarousel";
 import { useAdvertisementById } from "../../hooks/useAdvertisements";
+import { useCurrentUser } from "../../hooks/useUserProfile";
 import SaveButton from "../SaveButton";
+import EditMenu from "./EditMenu";
 
 function InfoCard({ label, value, icon: IconComponent }: { label: string; value: string | number; icon: React.ElementType }) {
     return (
@@ -37,6 +39,8 @@ function InfoCard({ label, value, icon: IconComponent }: { label: string; value:
 export default function AdvertisementPage() {
     const { id } = useParams<{ id: string }>();
     const { data: advertisement, isLoading, error } = useAdvertisementById(id || "");
+    const { data: currentUser } = useCurrentUser();
+    const isAuthor = !!currentUser && !!advertisement && currentUser.id === advertisement.author.id;
 
     return (
         <>
@@ -85,6 +89,7 @@ export default function AdvertisementPage() {
                         <Flex gap={3} justify="flex-end">
                             <SaveButton advertisementId={id || ""} />
                             <Button colorPalette="purple">Contact</Button>
+                            {isAuthor && <EditMenu advertisementId={id || ""} />}
                         </Flex>
                     </Stack>
                 )}
