@@ -1,5 +1,6 @@
 import { Card, Image, Text, Heading, Box, Link } from "@chakra-ui/react";
 import { useState } from "react";
+import { MdLocationOn } from "react-icons/md";
 import DropDownButton from "./DropDownButton";
 import HeartButton from "./HeartButton";
 import type { AdvertisementDto } from "../hooks/useAdvertisements";
@@ -11,7 +12,7 @@ export default function AdvertisementFeedCard({
 }: {
     advertisement: AdvertisementDto
 }) {
-    const { title, description, images } = advertisement;
+    const { title, description, images, price, location } = advertisement;
     const [isHovered, setIsHovered] = useState(false);
 
     // Get the primary image or fall back to the first image or use fallback
@@ -30,8 +31,8 @@ export default function AdvertisementFeedCard({
                 transition: "box-shadow 0.1s",
             }}
         >
-            <Box position="relative">
-                <Link href={`/advertisement/${advertisement.id}`}>
+            <Box>
+                <Link href={`/advertisement/${advertisement.id}`} display="block">
                     <Image
                         src={displayImage}
                         alt={title}
@@ -55,7 +56,13 @@ export default function AdvertisementFeedCard({
                         <Text color="gray.600" fontSize="sm" lineClamp="2">
                             {description}
                         </Text>
-                        
+                        <Text fontWeight="semibold" mt={2}>
+                            €{price.toFixed(2)}
+                        </Text>
+                        <Box display="flex" alignItems="center" gap={1} mt={1}>
+                            <MdLocationOn color="gray" size={14} />
+                            <Text color="gray.500" fontSize="xs">{location}</Text>
+                        </Box>
                     </Box>
                     <DropDownButton />
                 </Box>

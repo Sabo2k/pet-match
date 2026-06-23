@@ -28,7 +28,12 @@ export default function HomePage() {
                 )}
                 
                 {advertisements && advertisements.length > 0 ? (
-                    <Box display="flex" flexWrap="wrap" gap={6}>
+                    <Box 
+                        display="flex" 
+                        flexWrap="wrap" 
+                        gap={6} 
+                        justifyContent="center"
+                    >
                         {advertisements.map((ad) => (
                             <AdvertisementFeedCard 
                                 key={ad.id} 
