@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export interface AuthorDto {
     id: string;
@@ -64,5 +64,21 @@ export const useAdvertisementById = (id: string) => {
         queryKey: ["advertisement", id],
         queryFn: () => fetchAdvertisementById(id),
         staleTime: 5 * 60 * 1000, // 5 minutes
+    });
+};
+
+export const useDeleteAdvertisement = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (id: string) => {
+            const response = await fetch(`http://localhost:8080/api/v1/advertisements/${id}`, {
+                method: "DELETE",
+                credentials: "include",
+            });
+            if (!response.ok) throw new Error("Failed to delete advertisement");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["advertisements"] });
+        },
     });
 };
