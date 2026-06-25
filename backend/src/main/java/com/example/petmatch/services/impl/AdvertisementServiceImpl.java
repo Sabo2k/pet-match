@@ -85,7 +85,22 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         existingAdvertisement.setAge(advertisementRequest.getAge());
         existingAdvertisement.setPrice(advertisementRequest.getPrice());
         existingAdvertisement.setLocation(advertisementRequest.getLocation());
-        
+
+        if (advertisementRequest.getImages() != null && !advertisementRequest.getImages().isEmpty()) {
+            boolean hasExistingPrimary = existingAdvertisement.getImages().stream().anyMatch(Image::isPrimary);
+            for (UpdateAdvertisementRequest.ImageRequest imageRequest : advertisementRequest.getImages()) {
+                boolean setPrimary = imageRequest.isPrimary() && !hasExistingPrimary;
+                Image image = Image.builder()
+                        .imageUrl(imageRequest.getUrl())
+                        .isPrimary(setPrimary)
+                        .advertisement(existingAdvertisement)
+                        .build();
+                imageRepository.save(image);
+                existingAdvertisement.getImages().add(image);
+                if (setPrimary) hasExistingPrimary = true;
+            }
+        }
+
         return advertisementRepository.save(existingAdvertisement);
     }
 

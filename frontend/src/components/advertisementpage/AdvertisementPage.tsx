@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Box, Button, Card, Flex, Heading, HStack, Link, SimpleGrid, Spinner, Stack, Text } from "@chakra-ui/react";
-import { LuCalendar, LuDollarSign, LuMapPin, LuUser } from "react-icons/lu";
+import { LuCalendar, LuEuro, LuMapPin, LuUser } from "react-icons/lu";
 import Navbar from "../navbar/Navbar";
 import ImageCarousel from "./ImageCarousel";
 import { useAdvertisementById } from "../../hooks/useAdvertisements";
@@ -79,7 +79,7 @@ export default function AdvertisementPage() {
 
                         <SimpleGrid columns={4} gap={4}>
                             <InfoCard label="Age" value={advertisement.age} icon={LuCalendar} />
-                            <InfoCard label="Price" value={`$${advertisement.price}`} icon={LuDollarSign} />
+                            <InfoCard label="Price" value={`€ ${advertisement.price}`} icon={LuEuro} />
                             <InfoCard label="Location" value={advertisement.location} icon={LuMapPin} />
                             <Link href={`/profile/${advertisement.author.id}`}>
                                 <InfoCard label="Author" value={advertisement.author.username} icon={LuUser} />
@@ -89,7 +89,7 @@ export default function AdvertisementPage() {
                         <Flex gap={3} justify="flex-end">
                             <SaveButton advertisementId={id || ""} />
                             <Button colorPalette="purple">Contact</Button>
-                            {isAuthor && <EditMenu advertisementId={id || ""} />}
+                            {isAuthor && <EditMenu advertisement={advertisement} />}
                         </Flex>
                     </Stack>
                 )}
