@@ -89,7 +89,7 @@ export default function AdvertisementPage() {
                         <Flex gap={3} justify="flex-end">
                             <SaveButton advertisementId={id || ""} />
                             <Button colorPalette="purple">Contact</Button>
-                            {isAuthor && <EditMenu advertisementId={id || ""} />}
+                            {isAuthor && <EditMenu advertisement={advertisement} />}
                         </Flex>
                     </Stack>
                 )}

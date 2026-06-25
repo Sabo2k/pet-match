@@ -67,6 +67,36 @@ export const useAdvertisementById = (id: string) => {
     });
 };
 
+interface UpdateAdvertisementPayload {
+    id: string;
+    title: string;
+    description: string;
+    age: number;
+    price: number;
+    location: string;
+    images?: { url: string; isPrimary: boolean }[];
+}
+
+export const useUpdateAdvertisement = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ id, ...body }: UpdateAdvertisementPayload) => {
+            const response = await fetch(`http://localhost:8080/api/v1/advertisements/${id}`, {
+                method: "PUT",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+            });
+            if (!response.ok) throw new Error("Failed to update advertisement");
+            return response.json() as Promise<AdvertisementDto>;
+        },
+        onSuccess: (_, { id }) => {
+            queryClient.invalidateQueries({ queryKey: ["advertisement", id] });
+            queryClient.invalidateQueries({ queryKey: ["advertisements"] });
+        },
+    });
+};
+
 export const useDeleteAdvertisement = () => {
     const queryClient = useQueryClient();
     return useMutation({

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -19,4 +20,14 @@ public class UpdateAdvertisementRequest {
     private double price;
     private String location;
     private UUID categoryId;
+    private List<ImageRequest> images;
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class ImageRequest {
+        private String url;
+        private boolean isPrimary;
+    }
 }
