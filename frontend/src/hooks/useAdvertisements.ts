@@ -67,7 +67,7 @@ export const useAdvertisementById = (id: string) => {
     });
 };
 
-interface UpdateAdvertisementPayload {
+export interface UpdateAdvertisementPayload {
     id: string;
     title: string;
     description: string;
