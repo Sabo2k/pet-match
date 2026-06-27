@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button, Card, Flex, Heading, HStack, Link, SimpleGrid, Spinner, Stack, Text } from "@chakra-ui/react";
 import { LuCalendar, LuEuro, LuMapPin, LuUser } from "react-icons/lu";
@@ -7,6 +8,7 @@ import { useAdvertisementById } from "../../hooks/useAdvertisements";
 import { useCurrentUser } from "../../hooks/useUserProfile";
 import SaveButton from "../SaveButton";
 import EditMenu from "./EditMenu";
+import ContactDialog from "./ContactDialog";
 
 function InfoCard({ label, value, icon: IconComponent }: { label: string; value: string | number; icon: React.ElementType }) {
     return (
@@ -41,6 +43,7 @@ export default function AdvertisementPage() {
     const { data: advertisement, isLoading, error } = useAdvertisementById(id || "");
     const { data: currentUser } = useCurrentUser();
     const isAuthor = !!currentUser && !!advertisement && currentUser.id === advertisement.author.id;
+    const [contactOpen, setContactOpen] = useState(false);
 
     return (
         <>
@@ -88,9 +91,20 @@ export default function AdvertisementPage() {
 
                         <Flex gap={3} justify="flex-end">
                             <SaveButton advertisementId={id || ""} />
-                            <Button colorPalette="purple">Contact</Button>
+                            {!isAuthor && (
+                                <Button colorPalette="purple" onClick={() => setContactOpen(true)}>
+                                    Contact
+                                </Button>
+                            )}
                             {isAuthor && <EditMenu advertisement={advertisement} />}
                         </Flex>
+
+                        <ContactDialog
+                            open={contactOpen}
+                            onClose={() => setContactOpen(false)}
+                            recipientId={advertisement.author.id.toString()}
+                            advertisementId={id || ""}
+                        />
                     </Stack>
                 )}
             </Box>
