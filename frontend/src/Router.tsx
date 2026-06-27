@@ -8,6 +8,8 @@ import AdvertisementPage from "./components/advertisementpage/AdvertisementPage"
 import UserProfilePage from "./components/userprofilepage/UserProfilePage";
 import ProfilePage from "./components/profilepage/ProfilePage";
 import SettingsPage from "./components/settingspage/SettingsPage";
+import NotificationsPage from "./components/notificationspage/NotificationsPage";
+import ChatPage from "./components/chatpage/ChatPage";
 
 const routes: Array<{ path: string; element: ReactElement }> = [
     { path: "/", element: <HomePage/> },
@@ -17,6 +19,8 @@ const routes: Array<{ path: string; element: ReactElement }> = [
     { path: "/userprofile", element: <UserProfilePage/> },
     { path: "/profile/:userId", element: <ProfilePage/>},
     { path: "/settings", element: <SettingsPage/>},
+    { path: "/notifications", element: <NotificationsPage/>},
+    { path: "/chat/:id", element: <ChatPage/>},
     { path: "*", element: <NotFoundPage/> }, // Catch-all for 404
 ];
 

@@ -101,6 +101,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/categories").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/{userId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/{userId}/advertisements").permitAll()
+                        .requestMatchers("/api/v1/conversations/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
